@@ -1,8 +1,16 @@
-﻿
+﻿@* @{ *@
+@*     string name = "Mohamed"; *@
+@*     int age = 25; *@
+@*     List<string> skills = new List<string>(); *@
+@*     skills.Add("C++"); *@
+@*     skills.Add("C#"); *@
+@*     skills.Add("SQL"); *@
+@* } *@
+
 @* <h1>Hello ya @name Again!!!</h1> *@
 @* <h2>Your age: @age</h2> *@
 <h3>Skills: </h3>
-@foreach(var item in Model) {
-    <h4>@item</h4>
+@foreach(var item in @Model) {
+    <h4>@item</h3>
 }
 
