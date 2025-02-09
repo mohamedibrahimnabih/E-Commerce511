@@ -29,21 +29,9 @@ namespace E_Commerce511.Controllers
 
             if(product != null)
             {
-                var relatedProducts = dbContext.Products.Include(e => e.Category).Where(e => e.CategoryId == product.CategoryId).Skip(0).Take(4).ToList();
+                // Anno. Type => Product, ProductsWithCategories
 
-                //ProductsWithCategory productsWithCategory = new ProductsWithCategory()
-                //{
-                //    Product = product,
-                //    ProductsWithCategories = relatedProducts
-                //};
-
-                var productsWithCategory = new
-                {
-                    Product = product,
-                    ProductsWithCategories = relatedProducts
-                };
-
-                return View(productsWithCategory);
+                return View(product);
             }
 
             return RedirectToAction(nameof(NotFoundPage));
