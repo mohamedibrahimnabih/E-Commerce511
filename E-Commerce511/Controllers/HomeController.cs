@@ -30,8 +30,13 @@ namespace E_Commerce511.Controllers
             if(product != null)
             {
                 // Anno. Type => Product, ProductsWithCategories
+                var productWithRelated = new
+                {
+                    Product = product,
+                    Related = dbContext.Products.Where(e=>e.Name.Contains(product.Name.Substring(0, 5)) && e.Id != product.Id).Skip(0).Take(4).ToList()
+                };
 
-                return View(product);
+                return View(productWithRelated);
             }
 
             return RedirectToAction(nameof(NotFoundPage));
