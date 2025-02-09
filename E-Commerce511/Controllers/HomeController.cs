@@ -16,10 +16,33 @@ namespace E_Commerce511.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? categoryName, int? rating, string? productName, double? minRange, double? maxRange)
         {
-            var products = dbContext.Products.Include(e=>e.Category);
-            //
+            IQueryable<Product> products = dbContext.Products.Include(e=>e.Category);
+
+            if(categoryName != null)
+            {
+                products = products.Where(e => e.Category.Name == categoryName);
+            }
+
+            if (productName != null)
+            {
+                products = products.Where(e => e.Name.Contains(productName));
+            }
+
+            #region List of categories
+            var categories = dbContext.Categories.ToList();
+
+            //var productsWithCategories = new
+            //{
+            //    Products = products.ToList(),
+            //    Categories = categories.ToList()
+            //};
+
+            //ViewData["categories"] = categories;
+            ViewBag.categories = categories; 
+            #endregion
+
             return View(products.ToList());
         }
 
