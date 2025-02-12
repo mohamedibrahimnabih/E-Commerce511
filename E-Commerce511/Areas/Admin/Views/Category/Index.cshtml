@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h1>All Categories</h1>
-            <a class="btn btn-success">Create New</a>
+            <a class="btn btn-success" href="/Admin/Category/Create">Create New</a>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
                                 <td>@item.Name</td>
                                 <td>
                                     <a class="btn btn-warning btn-sm" href="/Admin/Category/Edit?catgeoryId=@item.Id">Edit</a>
-                                    <a class="btn btn-danger btn-sm">Delete</a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(@item.Id)">Delete</button>
                                 </td>
                             </tr>
                         }
@@ -35,3 +35,25 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        function confirmDelete(categoryId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/Admin/Category/Delete?catgeoryId=" + categoryId;
+                }
+            });
+        }
+    </script>
+}

@@ -16,11 +16,27 @@ namespace E_Commerce511.Areas.Admin.Controllers
             return View(categories.ToList());
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            // Validation
+
+            dbContext.Categories.Add(new Category
+            {
+                Name = category.Name
+            });
+            dbContext.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
         public IActionResult Edit(int catgeoryId)
         {
             var category = dbContext.Categories.FirstOrDefault(e => e.Id == catgeoryId);
@@ -33,17 +49,34 @@ namespace E_Commerce511.Areas.Admin.Controllers
             return RedirectToAction("NotFoundPage", "Home");
         }
 
-        public IActionResult SaveEdit(int catgeoryId, string categoryName)
+        [HttpPost]
+        public IActionResult Edit(Category category)
         {
             // Validation
+
             dbContext.Categories.Update(new Category
             {
-                Id = catgeoryId,
-                Name = categoryName
+                Id = category.Id,
+                Name = category.Name
             });
             dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int catgeoryId)
+        {
+            var category = dbContext.Categories.FirstOrDefault(e => e.Id == catgeoryId);
+
+            if (category != null)
+            {
+                dbContext.Categories.Remove(category);
+                dbContext.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("NotFoundPage", "Home");
         }
     }
 }
