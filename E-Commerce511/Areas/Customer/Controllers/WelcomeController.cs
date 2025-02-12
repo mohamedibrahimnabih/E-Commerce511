@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace E_Commerce511.Controllers
+namespace E_Commerce511.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class WelcomeController : Controller
     {
         public IActionResult Home()

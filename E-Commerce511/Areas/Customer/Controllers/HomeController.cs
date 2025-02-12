@@ -4,8 +4,9 @@ using E_Commerce511.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce511.Controllers
+namespace E_Commerce511.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,9 +19,9 @@ namespace E_Commerce511.Controllers
 
         public IActionResult Index(string? categoryName, int? rating, string? productName, double? minRange, double? maxRange)
         {
-            IQueryable<Product> products = dbContext.Products.Include(e=>e.Category);
+            IQueryable<Product> products = dbContext.Products.Include(e => e.Category);
 
-            if(categoryName != null)
+            if (categoryName != null)
             {
                 products = products.Where(e => e.Category.Name == categoryName);
             }
@@ -40,7 +41,7 @@ namespace E_Commerce511.Controllers
             //};
 
             //ViewData["categories"] = categories;
-            ViewBag.categories = categories; 
+            ViewBag.categories = categories;
             #endregion
 
             return View(products.ToList());
@@ -50,13 +51,13 @@ namespace E_Commerce511.Controllers
         {
             var product = dbContext.Products.Include(e => e.Category).FirstOrDefault(e => e.Id == productId);
 
-            if(product != null)
+            if (product != null)
             {
                 // Anno. Type => Product, ProductsWithCategories
                 var productWithRelated = new
                 {
                     Product = product,
-                    Related = dbContext.Products.Where(e=>e.Name.Contains(product.Name.Substring(0, 5)) && e.Id != product.Id).Skip(0).Take(4).ToList()
+                    Related = dbContext.Products.Where(e => e.Name.Contains(product.Name.Substring(0, 5)) && e.Id != product.Id).Skip(0).Take(4).ToList()
                 };
 
                 return View(productWithRelated);
