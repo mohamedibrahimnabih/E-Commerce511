@@ -9,5 +9,10 @@ namespace E_Commerce511.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult NotFoundPage()
+        {
+            return View();
+        }
     }
 }
