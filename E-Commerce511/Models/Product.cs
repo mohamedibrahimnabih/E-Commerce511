@@ -20,8 +20,11 @@ namespace E_Commerce511.Models
         [Range(0, 50)]
         public int Quantity { get; set; }
         public int CategoryId { get; set; }
+        public int? CompanyId { get; set; }
 
         [ValidateNever]
         public Category Category { get; set; }
+        [ValidateNever]
+        public Company Company { get; set; }
     }
 }

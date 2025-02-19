@@ -1,0 +1,59 @@
+﻿<div class="container my-3">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h1>All Companies</h1>
+            <a class="btn btn-success" asp-action="Create" asp-controller="Company" asp-area="Admin">Create New</a>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="bg-dark text-white">
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th scope="row">@item.Id</th>
+                                <td>@item.Name</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Company" asp-area="Admin" asp-route-companyId="@item.Id">Edit</a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(@item.Id)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function confirmDelete(companyId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/Admin/Company/Delete?companyId=" + companyId;
+                }
+            });
+        }
+    </script>
+}

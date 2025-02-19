@@ -1,0 +1,56 @@
+﻿@model Company
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h1>Create Company</h1>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            @* <form action="/Admin/Company/Create" method="post"> *@
+            @*     <div class="mb-3"> *@
+            @*         <label for="Name" class="form-label">Catgegory Name</label> *@
+            @*         <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name"> *@
+            @*         <span class="text-danger" asp-validation-for="Name"></span> *@
+            @*     </div> *@
+            @*     <button type="submit" class="btn btn-primary">Save</button> *@
+            @* </form> *@
+
+            @* @using (Html.BeginForm(FormMethod.Post)) { *@
+            @*     <div class="mb-3"> *@
+            @*         @Html.LabelFor(e => e.Name, new { @class="form-label" }) *@
+            @*         @Html.EditorFor(e => e.Name, new { htmlAttributes = new { @class="form-control" }}) *@
+            @*         @Html.ValidationMessageFor(e=>e.Name) *@
+            @*     </div> *@
+
+            @*     <button type="submit" class="btn btn-primary">Save</button> *@
+            @* } *@
+
+            <form asp-action="Create" asp-controller="Company" asp-area="Admin"> 
+                <div class="mb-3"> 
+                    <label asp-for="Name" class="form-label">Catgegory Name</label> 
+                    <input asp-for="Name" class="form-control"> 
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Catgegory Description</label>
+                    <input asp-for="Description" class="form-control">
+                    <span class="text-danger" asp-validation-for="Description"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Scale" class="form-label">Catgegory Scale</label>
+                    <input asp-for="Scale" class="form-control">
+                    <span class="text-danger" asp-validation-for="Scale"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml">
+}
