@@ -19,21 +19,26 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Category());
         }
 
         [HttpPost]
         public IActionResult Create(Category category)
         {
             // Validation
+            //ModelState.Remove("Products");
 
-            dbContext.Categories.Add(new Category
+            if(ModelState.IsValid)
             {
-                Name = category.Name
-            });
-            dbContext.SaveChanges();
+                dbContext.Categories.Add(new Category
+                {
+                    Name = category.Name
+                });
+                dbContext.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
 
-            return RedirectToAction(nameof(Index));
+            return View(category);
         }
 
         [HttpGet]

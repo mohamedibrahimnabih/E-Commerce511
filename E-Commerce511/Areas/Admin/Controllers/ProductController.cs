@@ -26,7 +26,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
             //ViewBag.Categories = categories;
             ViewData["Categories"] = categories.ToList();
 
-            return View();
+            return View(new Product());
         }
 
         [HttpPost]
@@ -34,30 +34,33 @@ namespace E_Commerce511.Areas.Admin.Controllers
         {
             // Validation
 
-            if (file != null && file.Length > 0)
+            if(ModelState.IsValid)
             {
-                // Save img in wwwroot
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
-
-                using (var stream = System.IO.File.Create(filePath))
+                if (file != null && file.Length > 0)
                 {
-                    file.CopyTo(stream);
+                    // Save img in wwwroot
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    // Save img name in db
+                    product.Img = fileName;
                 }
 
-                // Save img name in db
-                product.Img = fileName;
-            }
-
-            if (product != null)
-            {
                 dbContext.Products.Add(product);
                 dbContext.SaveChanges();
 
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("NotFoundPage", "Home");
+            var categories = dbContext.Categories;
+            //ViewBag.Categories = categories;
+            ViewData["Categories"] = categories.ToList();
+            return View(product);
         }
 
         [HttpGet]
