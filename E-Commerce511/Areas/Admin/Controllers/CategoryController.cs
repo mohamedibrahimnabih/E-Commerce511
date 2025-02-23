@@ -1,5 +1,6 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
+using E_Commerce511.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce511.Areas.Admin.Controllers
@@ -7,11 +8,12 @@ namespace E_Commerce511.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoryController : Controller
     {
-        ApplicationDbContext dbContext = new ApplicationDbContext();
+        //ApplicationDbContext dbContext = new ApplicationDbContext();
+        CategoryRepository categoryRepositry = new CategoryRepository();
 
         public IActionResult Index()
         {
-            var categories = dbContext.Categories;
+            var categories = categoryRepositry.Get();
 
             return View(categories.ToList());
         }
@@ -30,11 +32,8 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
             if(ModelState.IsValid)
             {
-                dbContext.Categories.Add(new Category
-                {
-                    Name = category.Name
-                });
-                dbContext.SaveChanges();
+                categoryRepositry.Create(category);
+                categoryRepositry.Commit();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -44,7 +43,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(int catgeoryId)
         {
-            var category = dbContext.Categories.FirstOrDefault(e => e.Id == catgeoryId);
+            var category = categoryRepositry.GetOne(e=>e.Id == catgeoryId);
 
             if(category != null)
             {
@@ -59,24 +58,20 @@ namespace E_Commerce511.Areas.Admin.Controllers
         {
             // Validation
 
-            dbContext.Categories.Update(new Category
-            {
-                Id = category.Id,
-                Name = category.Name
-            });
-            dbContext.SaveChanges();
+            categoryRepositry.Edit(category);
+            categoryRepositry.Commit();
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int catgeoryId)
         {
-            var category = dbContext.Categories.FirstOrDefault(e => e.Id == catgeoryId);
+            var category = categoryRepositry.GetOne(e => e.Id == catgeoryId);
 
             if (category != null)
             {
-                dbContext.Categories.Remove(category);
-                dbContext.SaveChanges();
+                categoryRepositry.Delete(category);
+                categoryRepositry.Commit();
 
                 return RedirectToAction(nameof(Index));
             }
