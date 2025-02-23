@@ -1,7 +1,9 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
+using E_Commerce511.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -10,11 +12,13 @@ namespace E_Commerce511.Areas.Admin.Controllers
     [Area("Admin")]
     public class ProductController : Controller
     {
-        ApplicationDbContext dbContext = new ApplicationDbContext();
+        //ApplicationDbContext dbContext = new ApplicationDbContext();
+        ProductRepository productRepository = new ProductRepository();  
+        CategoryRepository categoryRepository = new CategoryRepository();
 
         public IActionResult Index()
         {
-            var products = dbContext.Products.Include(e => e.Category);
+            var products = productRepository.Get(includes: [e => e.Category]);
 
             return View(products.ToList());
         }
@@ -22,7 +26,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var categories = dbContext.Categories;
+            var categories = categoryRepository.Get();
             //ViewBag.Categories = categories;
             ViewData["Categories"] = categories.ToList();
 
@@ -51,13 +55,13 @@ namespace E_Commerce511.Areas.Admin.Controllers
                     product.Img = fileName;
                 }
 
-                dbContext.Products.Add(product);
-                dbContext.SaveChanges();
+                productRepository.Create(product);
+                productRepository.Commit();
 
                 return RedirectToAction("Index");
             }
 
-            var categories = dbContext.Categories;
+            var categories = categoryRepository.Get();
             //ViewBag.Categories = categories;
             ViewData["Categories"] = categories.ToList();
             return View(product);
@@ -66,9 +70,9 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(int productId)
         {
-            var product = dbContext.Products.FirstOrDefault(e => e.Id == productId);
+            var product = productRepository.GetOne(e=>e.Id == productId);
 
-            var categories = dbContext.Categories;
+            var categories = categoryRepository.Get();
             //ViewBag.Categories = categories;
             ViewData["Categories"] = categories.ToList();
 
@@ -83,7 +87,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Product product, IFormFile? file)
         {
-            var productInDb = dbContext.Products.AsNoTracking().FirstOrDefault(e => e.Id == product.Id);
+            var productInDb = productRepository.GetOne(e => e.Id == product.Id, tracked: false);
 
             if (productInDb != null && file != null && file.Length > 0)
             {
@@ -111,8 +115,8 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
             if (product != null)
             {
-                dbContext.Products.Update(product);
-                dbContext.SaveChanges();
+                productRepository.Edit(product);
+                productRepository.Commit();
 
                 return RedirectToAction("Index");
             }
@@ -122,7 +126,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
         public IActionResult DeleteImg(int productId)
         {
-            var product = dbContext.Products.FirstOrDefault(e => e.Id == productId);
+            var product = productRepository.GetOne(e => e.Id == productId);
 
             if (product != null)
             {
@@ -135,7 +139,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
                 // Delete img name in db
                 product.Img = null;
-                dbContext.SaveChanges();
+                productRepository.Commit();
 
                 return RedirectToAction("Edit", new { productId });
             }
@@ -145,7 +149,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
         public IActionResult Delete(int productId)
         {
-            var product = dbContext.Products.FirstOrDefault(e => e.Id == productId);
+            var product = productRepository.GetOne(e => e.Id == productId);
 
             if (product != null)
             {
@@ -160,8 +164,8 @@ namespace E_Commerce511.Areas.Admin.Controllers
                 }
 
                 // Delete img name in db
-                dbContext.Products.Remove(product);
-                dbContext.SaveChanges();
+                productRepository.Delete(product);
+                productRepository.Commit();
 
                 return RedirectToAction("Index");
             }

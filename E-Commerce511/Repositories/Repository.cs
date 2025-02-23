@@ -1,11 +1,12 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
+using E_Commerce511.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace E_Commerce511.Repositories
 {
-    public class Repository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         ApplicationDbContext dbContext = new ApplicationDbContext();
         public DbSet<T> dbSet;

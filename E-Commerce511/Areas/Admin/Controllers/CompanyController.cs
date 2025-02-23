@@ -1,5 +1,6 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
+using E_Commerce511.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +9,13 @@ namespace E_Commerce511.Areas.Admin.Controllers
     [Area("Admin")]
     public class CompanyController : Controller
     {
-        ApplicationDbContext dbContext = new ApplicationDbContext();
+        //ApplicationDbContext dbContext = new ApplicationDbContext();
+        CompanyRepository companyRepository = new CompanyRepository();
+
 
         public IActionResult Index()
         {
-            var companies = dbContext.Companies;
+            var companies = companyRepository.Get();
 
             return View(companies.ToList());
         }
@@ -32,8 +35,8 @@ namespace E_Commerce511.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                dbContext.Companies.Add(company);
-                dbContext.SaveChanges();
+                companyRepository.Create(company);
+                companyRepository.Commit();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -43,7 +46,7 @@ namespace E_Commerce511.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(int companyId)
         {
-            var company = dbContext.Companies.FirstOrDefault(e => e.Id == companyId);
+            var company = companyRepository.GetOne(e=>e.Id == companyId);
 
             if (company != null)
             {
@@ -59,20 +62,20 @@ namespace E_Commerce511.Areas.Admin.Controllers
         {
             // Validation
 
-            dbContext.Companies.Update(company);
-            dbContext.SaveChanges();
+            companyRepository.Edit(company);
+            companyRepository.Commit();
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int companyId)
         {
-            var company = dbContext.Companies.FirstOrDefault(e => e.Id == companyId);
+            var company = companyRepository.GetOne(e => e.Id == companyId);
 
             if (company != null)
             {
-                dbContext.Companies.Remove(company);
-                dbContext.SaveChanges();
+                companyRepository.Delete(company);
+                companyRepository.Commit();
 
                 return RedirectToAction(nameof(Index));
             }
