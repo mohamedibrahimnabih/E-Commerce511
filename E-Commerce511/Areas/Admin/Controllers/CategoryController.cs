@@ -40,6 +40,15 @@ namespace E_Commerce511.Areas.Admin.Controllers
             {
                 categoryRepository.Create(category);
                 categoryRepository.Commit();
+
+                //TempData["notifaction"] = "Created Category Successfuly";
+                CookieOptions cookieOptions = new CookieOptions()
+                {
+                    Expires = DateTime.Now.AddSeconds(10),
+                    Secure = true
+                };
+                Response.Cookies.Append("notifaction", "Created Category Successfuly", cookieOptions);
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -67,6 +76,9 @@ namespace E_Commerce511.Areas.Admin.Controllers
             categoryRepository.Edit(category);
             categoryRepository.Commit();
 
+            TempData["notifaction"] = "Update Category Successfuly";
+
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -78,6 +90,9 @@ namespace E_Commerce511.Areas.Admin.Controllers
             {
                 categoryRepository.Delete(category);
                 categoryRepository.Commit();
+
+                TempData["notifaction"] = "Delete Category Successfuly";
+
 
                 return RedirectToAction(nameof(Index));
             }
