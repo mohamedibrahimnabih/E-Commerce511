@@ -1,6 +1,7 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
 using E_Commerce511.Repositories;
+using E_Commerce511.Repositories.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -13,8 +14,16 @@ namespace E_Commerce511.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         //ApplicationDbContext dbContext = new ApplicationDbContext();
-        ProductRepository productRepository = new ProductRepository();  
-        CategoryRepository categoryRepository = new CategoryRepository();
+        //ProductRepository productRepository = new ProductRepository();  
+        //CategoryRepository categoryRepository = new CategoryRepository();
+        private readonly IProductRepository productRepository;
+        private readonly ICategoryRepository categoryRepository;
+
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository)
+        {
+            this.productRepository = productRepository;
+            this.categoryRepository = categoryRepository;
+        }
 
         public IActionResult Index()
         {

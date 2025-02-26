@@ -8,11 +8,13 @@ namespace E_Commerce511.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        ApplicationDbContext dbContext = new ApplicationDbContext();
+        //ApplicationDbContext dbContext;// = new ApplicationDbContext();
+        private readonly ApplicationDbContext dbContext;
         public DbSet<T> dbSet;
 
-        public Repository()
+        public Repository(ApplicationDbContext applicationDb)
         {
+            this.dbContext = applicationDb;
             dbSet = dbContext.Set<T>();
         }
 

@@ -9,6 +9,17 @@ namespace E_Commerce511.DataAccess
         public DbSet<Category> Categories { get; set; }
         public DbSet<Company> Companies { get; set; }
 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+        {
+        }
+
+        // Legacy Code
+
+        public ApplicationDbContext()
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
