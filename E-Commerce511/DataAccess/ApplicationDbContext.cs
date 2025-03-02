@@ -1,9 +1,11 @@
 ﻿using E_Commerce511.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using E_Commerce511.Models.ViewModels;
 
 namespace E_Commerce511.DataAccess
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -26,5 +28,6 @@ namespace E_Commerce511.DataAccess
 
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=E-Commerce511;Integrated Security=True;TrustServerCertificate=True");
         }
+        public DbSet<E_Commerce511.Models.ViewModels.RegisterVM> RegisterVM { get; set; } = default!;
     }
 }
