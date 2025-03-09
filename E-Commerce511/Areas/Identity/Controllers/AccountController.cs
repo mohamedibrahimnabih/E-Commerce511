@@ -2,6 +2,7 @@
 using E_Commerce511.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace E_Commerce511.Areas.Identity.Controllers
@@ -9,18 +10,28 @@ namespace E_Commerce511.Areas.Identity.Controllers
     [Area("Identity")]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            this._userManager = userManager;
+            this._signInManager = signInManager;
+            this._roleManager = roleManager;
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
+            if(_roleManager.Roles.IsNullOrEmpty())
+            {
+                await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("Company"));
+                await _roleManager.CreateAsync(new IdentityRole("Customer"));
+            }
+
             return View();
         }
 
@@ -37,12 +48,14 @@ namespace E_Commerce511.Areas.Identity.Controllers
                     Address = registerVM.Address
                 };
 
-                var result = await userManager.CreateAsync(applicationUser, registerVM.Password);
+                var result = await _userManager.CreateAsync(applicationUser, registerVM.Password);
 
                 if (result.Succeeded)
                 {
                     // Success Register
-                    await signInManager.SignInAsync(applicationUser, false);
+                    await _signInManager.SignInAsync(applicationUser, false);
+
+                    await _userManager.AddToRoleAsync(applicationUser, "Customer");
 
                     return RedirectToAction("Index", "Home", new { area = "Customer" });
                 }
@@ -68,16 +81,16 @@ namespace E_Commerce511.Areas.Identity.Controllers
         {
             if(ModelState.IsValid)
             {
-                var appUser = await userManager.FindByEmailAsync(loginVM.Email);
+                var appUser = await _userManager.FindByEmailAsync(loginVM.Email);
 
                 if(appUser != null)
                 {
-                    var result = await userManager.CheckPasswordAsync(appUser, loginVM.Password);
+                    var result = await _userManager.CheckPasswordAsync(appUser, loginVM.Password);
 
                     if (result)
                     {
                         // Login
-                        await signInManager.SignInAsync(appUser, loginVM.RememberMe);
+                        await _signInManager.SignInAsync(appUser, loginVM.RememberMe);
 
                         return RedirectToAction("Index", "Home", new { area = "Customer" });
                     }
@@ -97,8 +110,10 @@ namespace E_Commerce511.Areas.Identity.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account", new { area = "Identity" });
         }
+
+        public IActionResult AccessDenied() => View();
     }
 }

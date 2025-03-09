@@ -1,12 +1,15 @@
 ﻿using E_Commerce511.DataAccess;
 using E_Commerce511.Models;
 using E_Commerce511.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce511.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+
     public class CompanyController : Controller
     {
         private readonly ICompanyRepository companyRepository;

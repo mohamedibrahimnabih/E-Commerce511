@@ -2,11 +2,14 @@
 using E_Commerce511.Models;
 using E_Commerce511.Repositories;
 using E_Commerce511.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce511.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository categoryRepository;

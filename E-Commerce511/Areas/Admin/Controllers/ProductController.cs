@@ -2,6 +2,7 @@
 using E_Commerce511.Models;
 using E_Commerce511.Repositories;
 using E_Commerce511.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -11,6 +12,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 namespace E_Commerce511.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+
     public class ProductController : Controller
     {
         //ApplicationDbContext dbContext = new ApplicationDbContext();
