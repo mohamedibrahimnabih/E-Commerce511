@@ -3,6 +3,7 @@ using E_Commerce511.Models;
 using E_Commerce511.Repositories;
 using E_Commerce511.Repositories.IRepositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce511
@@ -29,6 +30,7 @@ namespace E_Commerce511
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
             var app = builder.Build();
 

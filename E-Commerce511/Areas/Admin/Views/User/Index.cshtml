@@ -1,0 +1,96 @@
+﻿@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h1>All Users</h1>
+            <a class="btn btn-success" href="/Admin/User/Create">Create New</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <form>
+            <div class="col-12 d-flex justify-content-between">
+                <input type="text" class="form-control mx-3" id="search" aria-describedby="searchHelp" name="query" value="" placeholder="Search...">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="bg-dark text-white">
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th scope="row">@item.Id</th>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" href="/Admin/User/Edit?userId=@item.Id">Edit</a>
+                                    <a class="btn btn-warning btn-sm" href="/Admin/User/Block?userId=@item.Id">Block</a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(@item.Id)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @for (int i = 0; i < ViewBag.totalPages; i++)
+            {
+                <li class="page-item"><a class="page-link" href="/Admin/Index?page=@i">@i</a></li>
+
+            }
+        </ul>
+    </nav>
+</div>
+
+
+@section Scripts {
+    @* @if(@TempData["notifaction"] != null) { *@
+    <script>
+        toastr.success('@Context.Request.Cookies["notifaction"]')
+    </script>
+    @* } *@
+
+    <script>
+        function confirmDelete(userId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/Admin/User/Delete?userId=" + userId;
+                }
+            });
+        }
+    </script>
+}
