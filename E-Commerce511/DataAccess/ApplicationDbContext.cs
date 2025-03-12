@@ -10,6 +10,7 @@ namespace E_Commerce511.DataAccess
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -28,7 +29,5 @@ namespace E_Commerce511.DataAccess
 
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=E-Commerce511;Integrated Security=True;TrustServerCertificate=True");
         }
-        public DbSet<E_Commerce511.Models.ViewModels.RegisterVM> RegisterVM { get; set; } = default!;
-        public DbSet<E_Commerce511.Models.ViewModels.LoginVM> LoginVM { get; set; } = default!;
     }
 }

@@ -2,6 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section Scripts {
+    @if (@TempData["notifaction"] != null)
+    {
+        <script>
+            toastr.success('@TempData["notifaction"]')
+        </script>
+    }
+}
+
 <!-- Header -->
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">

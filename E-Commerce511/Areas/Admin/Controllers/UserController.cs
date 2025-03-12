@@ -25,12 +25,12 @@ namespace E_Commerce511.Areas.Admin.Controllers
                 users = _userRepository.Get(e => e.UserName.Contains(query) || e.Email.Contains(query)); // 13
             }
 
-            var totalPages = Math.Ceiling((decimal)(users.ToList().Count / 5));
+            var totalPages = Math.Ceiling((decimal)(users.ToList().Count / 2));
 
             if (totalPages < page - 1)
                 return RedirectToAction("NotFoundPage", "Home", new { area = "Customer" });
 
-            users = users.Skip((page-1) * 5).Take(5); // 3
+            users = users.Skip((page-1) * 2).Take(2); // 3
 
             ViewBag.totalPages = totalPages;
             return View(users.ToList());
